@@ -19,7 +19,7 @@ namespace PhoneBook.Repository
 
         public bool CountryExists(int countId)
         {
-            throw new NotImplementedException();
+            return _context.Country.Any(c => c.Id == countId);
         }
 
         public ICollection<Country> GetCountries()

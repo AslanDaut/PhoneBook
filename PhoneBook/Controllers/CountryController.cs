@@ -29,12 +29,12 @@ namespace PhoneBook.Controllers
         [HttpGet("{countId}")]
         [ProducesResponseType(200, Type = typeof(Country))]
         [ProducesResponseType(400)]
-        public IActionResult GetCountry(int CountId)
+        public IActionResult GetCountry(int countId)
         {
-            if (!_countryRepository.CountryExists(CountId))
+            if (!_countryRepository.CountryExists(countId))
                 return NotFound();
 
-            var country = _countryRepository.GetCountry(CountId);
+            var country = _countryRepository.GetCountry(countId);
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
