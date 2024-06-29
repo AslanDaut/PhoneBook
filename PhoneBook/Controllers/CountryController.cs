@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PhoneBook.Dto;
 using PhoneBook.Interfaces;
 using PhoneBook.Model;
 
@@ -10,16 +12,19 @@ namespace PhoneBook.Controllers
     public class CountryController : ControllerBase
     {
         private readonly ICountryRepository _countryRepository;
+        private IMapper _mapper;
 
-        public CountryController(ICountryRepository countryRepository)
+        public CountryController(ICountryRepository countryRepository, IMapper mapper)
         {
             _countryRepository = countryRepository;
+            _mapper = mapper;
         }
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Country>))]
         public IActionResult GetCountries()
         {
-            var country = _countryRepository.GetCountries();
+            var country = _mapper.Map<List<CountryDto>>(_countryRepository.GetCountries());
+
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -34,7 +39,7 @@ namespace PhoneBook.Controllers
             if (!_countryRepository.CountryExists(countId))
                 return NotFound();
 
-            var country = _countryRepository.GetCountry(countId);
+            var country = _mapper.Map<CountryDto>(_countryRepository.GetCountry(countId));
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

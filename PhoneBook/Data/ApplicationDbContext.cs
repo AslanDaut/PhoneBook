@@ -12,5 +12,6 @@ namespace PhoneBook.Data
 
         public DbSet<Country> Country { get; set; }
         public DbSet<Review> Reviews { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }

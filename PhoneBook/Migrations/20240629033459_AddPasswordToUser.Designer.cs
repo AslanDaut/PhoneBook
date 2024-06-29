@@ -11,8 +11,8 @@ using PhoneBook.Data;
 namespace PhoneBook.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240622181905_initial")]
-    partial class initial
+    [Migration("20240629033459_AddPasswordToUser")]
+    partial class AddPasswordToUser
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -41,7 +41,7 @@ namespace PhoneBook.Migrations
                     b.ToTable("Country");
                 });
 
-            modelBuilder.Entity("PhoneBook.Model.Number", b =>
+            modelBuilder.Entity("PhoneBook.Model.Review", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -49,16 +49,20 @@ namespace PhoneBook.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("CountryId")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("Rating")
+                        .HasColumnType("numeric");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Number");
+                    b.HasIndex("CountryId");
+
+                    b.ToTable("Reviews");
                 });
 
-            modelBuilder.Entity("PhoneBook.Model.Owner", b =>
+            modelBuilder.Entity("PhoneBook.Model.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -66,13 +70,28 @@ namespace PhoneBook.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Owner");
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("PhoneBook.Model.Review", b =>
+                {
+                    b.HasOne("PhoneBook.Model.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Country");
                 });
 #pragma warning restore 612, 618
         }

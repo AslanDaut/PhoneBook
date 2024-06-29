@@ -5,31 +5,33 @@ using PhoneBook.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Строка подключения
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
+// Добавление DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(connectionString));
 
-
-builder.Services.AddControllers();
+// Добавление сервисов
 builder.Services.AddScoped<ICountryRepository, CountryRepository>();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+// Добавление контроллеров и Swagger
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment()) 
+// Конфигурация HTTP request pipeline
+if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();
