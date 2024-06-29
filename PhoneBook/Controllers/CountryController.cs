@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PhoneBook.Dto;
@@ -8,6 +9,7 @@ using PhoneBook.Model;
 namespace PhoneBook.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class CountryController : ControllerBase
     {
